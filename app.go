@@ -23,15 +23,22 @@ func main() {
 	mongodbUri := os.Getenv("MONGODB_URI")
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://" + mongodbUri))
 
-	exitIfError(err)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err = client.Connect(ctx)
-	exitIfError(err)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
 	err = client.Ping(ctx, nil)
 
-
-	exitIfError(err)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 
 	r := mux.NewRouter()
 
@@ -41,11 +48,4 @@ func main() {
 
 	fmt.Println("Server listening!")
 	http.ListenAndServe(":8080", r)
-}
-
-func exitIfError(err error) {
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
 }
