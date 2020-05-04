@@ -1,0 +1,5 @@
+vendor/
+vendor-*
+go-docker-compose
+build/*
+!build/.gitkeep
