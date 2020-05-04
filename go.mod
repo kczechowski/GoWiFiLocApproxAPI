@@ -1,4 +1,4 @@
-module github.com/callicoder/go-docker-compose
+module github.com/kczechowski/GoWiFiLocApproxAPI
 
 go 1.14
 
