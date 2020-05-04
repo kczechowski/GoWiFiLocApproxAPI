@@ -4,14 +4,21 @@ import (
 	"context"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"net/http"
 	"os"
 	"time"
 )
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	mongodbUri := os.Getenv("MONGODB_URI")
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://" + mongodbUri))
