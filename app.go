@@ -20,8 +20,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	mongodbUri := os.Getenv("MONGODB_URI")
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://" + mongodbUri))
+	mongoURI := fmt.Sprintf("mongodb://%s", os.Getenv("MONGODB_URI"))
+	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 
 	if err != nil {
 		log.Fatal(err.Error())
