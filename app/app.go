@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/kczechowski/GoWiFiLocApproxAPI/app/container"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -13,13 +14,8 @@ import (
 	"time"
 )
 
-type Container struct {
-	Router *mux.Router
-	Mongo *mongo.Client
-}
-
 type App struct {
-	Container *Container
+	Container *container.Container
 }
 
 func (app *App) Init() {
@@ -28,7 +24,7 @@ func (app *App) Init() {
 		log.Fatal("Error loading .env file")
 	}
 
-	app.Container = &Container{}
+	app.Container = &container.Container{}
 
 	mongoClient, err := app.getMongo()
 
@@ -73,7 +69,8 @@ func (app *App) getMongo() (*mongo.Client, error) {
 	return client, err
 }
 
-type RequestHandlerFunc func(container *Container, w http.ResponseWriter, r *http.Request)
+
+type RequestHandlerFunc func(container *container.Container, w http.ResponseWriter, r *http.Request)
 
 func (app *App) handleFunc(handler RequestHandlerFunc) http.HandlerFunc  {
 	return func(writer http.ResponseWriter, request *http.Request) {
