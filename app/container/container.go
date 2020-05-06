@@ -6,6 +6,7 @@ import (
 )
 
 type Container struct {
-	Router *mux.Router
-	Mongo *mongo.Client
+	Router        *mux.Router
+	MongoClient   *mongo.Client
+	MongoDatabase func() *mongo.Database
 }

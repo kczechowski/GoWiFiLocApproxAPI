@@ -32,7 +32,12 @@ func (app *App) Init() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	app.Container.Mongo = mongoClient
+	app.Container.MongoClient = mongoClient
+
+	//Use closure to retrieve mongo database instance
+	app.Container.MongoDatabase = func() *mongo.Database {
+		return mongoClient.Database(os.Getenv("MONGODB_DATABASE"))
+	}
 
 	app.Container.Router = mux.NewRouter()
 	app.setRoutes()
