@@ -69,6 +69,25 @@ func (app *App) getMongo() (*mongo.Client, error) {
 	return client, err
 }
 
+func (app *App) Get(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	app.Container.Router.HandleFunc(path, f).Methods("GET")
+}
+
+func (app *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	app.Container.Router.HandleFunc(path, f).Methods("POST")
+}
+
+func (app *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	app.Container.Router.HandleFunc(path, f).Methods("POST")
+}
+
+func (app *App) Patch(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	app.Container.Router.HandleFunc(path, f).Methods("PATCH")
+}
+
+func (app *App) Delete(path string, f func(w http.ResponseWriter, r *http.Request)) {
+	app.Container.Router.HandleFunc(path, f).Methods("DELETE")
+}
 
 type RequestHandlerFunc func(container *container.Container, w http.ResponseWriter, r *http.Request)
 
