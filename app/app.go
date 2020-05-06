@@ -73,6 +73,14 @@ func (app *App) getMongo() (*mongo.Client, error) {
 	return client, err
 }
 
+type RequestHandlerFunc func(container *Container, w http.ResponseWriter, r *http.Request)
+
+func (app *App) handleFunc(handler RequestHandlerFunc) http.HandlerFunc  {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		handler(app.Container, writer, request)
+	}
+}
+
 func (app *App) Run(host string) {
 	fmt.Println("Server listening!")
 	log.Fatal(http.ListenAndServe(host, app.Container.Router))
