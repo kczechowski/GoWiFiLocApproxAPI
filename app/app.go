@@ -76,7 +76,7 @@ func (app *App) Post(path string, f func(w http.ResponseWriter, r *http.Request)
 }
 
 func (app *App) Put(path string, f func(w http.ResponseWriter, r *http.Request)) {
-	app.Container.Router.HandleFunc(path, f).Methods("POST")
+	app.Container.Router.HandleFunc(path, f).Methods("PUT")
 }
 
 func (app *App) Patch(path string, f func(w http.ResponseWriter, r *http.Request)) {
