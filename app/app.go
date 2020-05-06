@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"github.com/kczechowski/GoWiFiLocApproxAPI/app/container"
+	"github.com/kczechowski/GoWiFiLocApproxAPI/app/handlers"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -39,10 +40,7 @@ func (app *App) Init() {
 }
 
 func (app *App) setRoutes() {
-	router := app.Container.Router
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Welcome to this life-changing API.\nIts the best API, its true, all other API's are fake.")
-	})
+	app.Get("/", app.handleFunc(handlers.GetIndex))
 }
 
 func (app *App) getMongo() (*mongo.Client, error) {
