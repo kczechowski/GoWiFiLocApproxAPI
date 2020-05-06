@@ -45,7 +45,9 @@ func (app *App) setRoutes() {
 
 func (app *App) getMongo() (*mongo.Client, error) {
 	mongoURI := fmt.Sprintf("mongodb://%s", os.Getenv("MONGODB_URI"))
-	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
+	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI).SetAuth(options.Credential{
+		AuthSource: os.Getenv("MONGODB_DATABASE"), Username: os.Getenv("MONGODB_USERNAME"), Password: os.Getenv("MONGODB_PASSWORD"),
+	}))
 
 	if err != nil {
 		return nil, err
@@ -57,7 +59,6 @@ func (app *App) getMongo() (*mongo.Client, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	err = client.Ping(ctx, nil)
 
 	if err != nil {
