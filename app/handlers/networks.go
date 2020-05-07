@@ -13,7 +13,7 @@ func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.
 	collection := container.MongoDatabase().Collection("networks")
 	cursor, err := collection.Find(ctx, bson.D{})
 	if err != nil {
-		respondWithError(w, err)
+		respondWithError(w, err, http.StatusInternalServerError)
 		return
 	}
 	defer cursor.Close(ctx)
@@ -21,11 +21,11 @@ func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.
 	var networks []bson.M
 
 	if err = cursor.All(ctx, &networks); err != nil {
-		respondWithError(w, err)
+		respondWithError(w, err, http.StatusInternalServerError)
 		return
 	}
 	if err := cursor.Err(); err != nil {
-		respondWithError(w, err)
+		respondWithError(w, err, http.StatusInternalServerError)
 		return
 	}
 

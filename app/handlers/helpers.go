@@ -22,8 +22,8 @@ type JsonError struct {
 	Message   string `json:"message"`
 }
 
-func respondWithError(w http.ResponseWriter, err error) http.ResponseWriter {
-	w.WriteHeader(http.StatusInternalServerError)
+func respondWithError(w http.ResponseWriter, err error, status int) http.ResponseWriter {
+	w.WriteHeader(status)
 
 	m := make(map[string]JsonError)
 	m["error"] = JsonError{
