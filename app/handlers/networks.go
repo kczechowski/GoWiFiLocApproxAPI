@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/kczechowski/GoWiFiLocApproxAPI/app/container"
 	"go.mongodb.org/mongo-driver/bson"
-	"log"
 	"net/http"
 )
 
@@ -14,19 +13,20 @@ func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.
 	collection := container.MongoDatabase().Collection("networks")
 	cursor, err := collection.Find(ctx, bson.D{})
 	if err != nil {
-		log.Fatal(err)
+		respondWithError(w, err)
+		return
 	}
 	defer cursor.Close(ctx)
 
 	var networks []bson.M
 
 	if err = cursor.All(ctx, &networks); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		respondWithError(w, err)
+		return
 	}
 	if err := cursor.Err(); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
+		respondWithError(w, err)
+		return
 	}
 
 	//if found records == 0 then initialize networks slice
