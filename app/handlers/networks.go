@@ -2,18 +2,51 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kczechowski/GoWiFiLocApproxAPI/app/container"
 	"github.com/kczechowski/GoWiFiLocApproxAPI/app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
+	"reflect"
+	"strings"
 )
 
 func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.Request) {
 
+	networkFilter := models.Network{}
+
+	if filters := r.URL.Query()["filter"]; len(filters) > 0 {
+		var filterString = filters[0]
+
+		err := json.Unmarshal([]byte(filterString), &networkFilter)
+		if err != nil {
+			respondWithError(w, err, http.StatusBadRequest)
+			return
+		}
+	}
+
+	fmt.Println(networkFilter)
+
+	filter := bson.M{}
+
+
+	// foreach on parsed filter
+	v := reflect.ValueOf(networkFilter)
+	for i := 0; i < v.NumField(); i++ {
+		fieldName := v.Type().Field(i).Name
+		fieldValue := v.Field(i)
+		if !fieldValue.IsZero() {
+			filter[strings.ToLower(fieldName)] = fieldValue.String()
+		}
+	}
+
+	fmt.Println(filter)
+
+
 	ctx := r.Context()
 	collection := container.MongoDatabase().Collection("networks")
 
-	cursor, err := collection.Find(ctx, bson.D{})
+	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
 		respondWithError(w, err, http.StatusInternalServerError)
 		return
