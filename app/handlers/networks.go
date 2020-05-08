@@ -8,7 +8,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
 	"reflect"
-	"strings"
 )
 
 func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.Request) {
@@ -25,23 +24,19 @@ func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.
 		}
 	}
 
-	fmt.Println(networkFilter)
-
 	filter := bson.M{}
-
 
 	// foreach on parsed filter
 	v := reflect.ValueOf(networkFilter)
 	for i := 0; i < v.NumField(); i++ {
-		fieldName := v.Type().Field(i).Name
+		jsonTag := v.Type().Field(i).Tag.Get("json")
 		fieldValue := v.Field(i)
 		if !fieldValue.IsZero() {
-			filter[strings.ToLower(fieldName)] = fieldValue.String()
+			filter[jsonTag] = fieldValue.String()
 		}
 	}
 
 	fmt.Println(filter)
-
 
 	ctx := r.Context()
 	collection := container.MongoDatabase().Collection("networks")
