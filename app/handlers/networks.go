@@ -12,7 +12,7 @@ import (
 
 func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.Request) {
 
-	networkFilter := models.Network{}
+	networkFilter := models.NetworkFilter{}
 
 	if filters := r.URL.Query()["filter"]; len(filters) > 0 {
 		var filterString = filters[0]
