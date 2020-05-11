@@ -7,7 +7,6 @@ import (
 	"github.com/kczechowski/GoWiFiLocApproxAPI/app/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"net/http"
-	"reflect"
 )
 
 func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.Request) {
@@ -24,17 +23,7 @@ func GetNetworks(container *container.Container, w http.ResponseWriter, r *http.
 		}
 	}
 
-	filter := bson.M{}
-
-	// foreach on parsed filter
-	v := reflect.ValueOf(networkFilter)
-	for i := 0; i < v.NumField(); i++ {
-		jsonTag := v.Type().Field(i).Tag.Get("json")
-		fieldValue := v.Field(i)
-		if !fieldValue.IsZero() {
-			filter[jsonTag] = fieldValue.String()
-		}
-	}
+	filter := networkFilter.ToMongoFilter()
 
 	fmt.Println(filter)
 
