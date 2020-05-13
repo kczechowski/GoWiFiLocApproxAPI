@@ -79,9 +79,9 @@ func PostNetwork(container *container.Container, w http.ResponseWriter, r *http.
 	collection := container.MongoDatabase().Collection("networks")
 
 	res, err := collection.InsertOne(ctx, bson.M{
-		"mac": network.Mac,
-		"lat": network.Lat,
-		"lon": network.Lon,
+		"mac":       network.Mac,
+		"lat":       network.Lat,
+		"lon":       network.Lon,
 		"device_id": deviceid,
 	})
 
@@ -100,4 +100,14 @@ func PostNetwork(container *container.Container, w http.ResponseWriter, r *http.
 	}
 
 	respondWithJson(w, addedNetwork)
+}
+
+func DeleteNetwork(container *container.Container, w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	collection := container.MongoDatabase().Collection("networks")
+
+	_, err := collection.DeleteMany(ctx, bson.D{})
+	if err != nil {
+		respondWithError(w, err, http.StatusBadRequest)
+	}
 }

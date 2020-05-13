@@ -48,6 +48,7 @@ func (app *App) setRoutes() {
 	app.Get("/", app.handleFunc(handlers.GetIndex))
 	app.Get("/networks/", app.handleFunc(handlers.GetNetworks))
 	app.Post("/networks/", app.handleFunc(handlers.PostNetwork))
+	app.Delete("/networks/", app.handleFunc(handlers.DeleteNetwork))
 }
 
 func (app *App) getMongo() (*mongo.Client, error) {
