@@ -83,6 +83,7 @@ func PostNetwork(container *container.Container, w http.ResponseWriter, r *http.
 		"lat":       network.Lat,
 		"lon":       network.Lon,
 		"device_id": deviceid,
+		"signal_strength": network.SignalStrength,
 	})
 
 	if err != nil {
